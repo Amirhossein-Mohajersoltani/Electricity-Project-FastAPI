@@ -1,8 +1,8 @@
 import pandas as pd
-from api.app.datafetch import Database
+from app.datafetch import Database
 import jdatetime
 from datetime import datetime
-from api.app.models.schema import FilterDataEnergyCompare , ResultDataEnergyCompare
+from app.models.schema import FilterDataEnergyCompare , ResultDataEnergyCompare
 
 
 def convert_to_gregorian(date_str):

@@ -1,5 +1,5 @@
-from api.app.datafetch import Database
-from api.app.models.schema import FilterDataTariffShare , ResultDataTariffShare
+from app.datafetch import Database
+from app.models.schema import FilterDataTariffShare , ResultDataTariffShare
 
 
 def tariff_share_analyze(data : FilterDataTariffShare)-> ResultDataTariffShare:

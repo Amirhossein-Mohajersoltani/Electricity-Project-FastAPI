@@ -1,7 +1,7 @@
-from api.app.datafetch import Database
+from app.datafetch import Database
 import pandas as pd
 import jdatetime
-from api.app.models.schema import FilterDataLongTerm, ResultDataLongTerm
+from app.models.schema import FilterDataLongTerm, ResultDataLongTerm
 
 def long_term(data: FilterDataLongTerm) -> ResultDataLongTerm:
     """

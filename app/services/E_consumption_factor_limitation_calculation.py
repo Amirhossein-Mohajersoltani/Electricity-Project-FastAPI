@@ -1,5 +1,5 @@
-from api.app.datafetch import Database
-from api.app.models.schema import FilterDataConsumptionReductionFactor, ResultDataConsumptionReductionFactor
+from app.datafetch import Database
+from app.models.schema import FilterDataConsumptionReductionFactor, ResultDataConsumptionReductionFactor
 from persiantools.jdatetime import JalaliDate
 
 def consumption_reduction_factor(

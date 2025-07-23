@@ -1,6 +1,6 @@
 import pandas as pd
-from api.app.datafetch import Database
-from api.app.models.schema import FilterDataWeeklyPeak, ResultDataWeeklyPeak
+from app.datafetch import Database
+from app.models.schema import FilterDataWeeklyPeak, ResultDataWeeklyPeak
 import jdatetime
 
 

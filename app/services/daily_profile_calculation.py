@@ -1,5 +1,5 @@
-from api.app.datafetch import Database
-from api.app.models.schema import FilterDataDailyProfile , ResultDataDailyProfile
+from app.datafetch import Database
+from app.models.schema import FilterDataDailyProfile , ResultDataDailyProfile
 
 
 

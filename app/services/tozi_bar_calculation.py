@@ -1,7 +1,7 @@
 import pandas as pd
-from api.app.datafetch import Database
+from app.datafetch import Database
 import jdatetime
-from api.app.models.schema import FilterDataToziBar , ResultDataToziBar
+from app.models.schema import FilterDataToziBar , ResultDataToziBar
 
 def tozi_bar(data: FilterDataToziBar) -> ResultDataToziBar:
     extractor = Database(

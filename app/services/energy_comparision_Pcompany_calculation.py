@@ -1,8 +1,8 @@
 import pandas as pd
 from datetime import timedelta
 import jdatetime
-from api.app.datafetch import Database
-from api.app.models.schema import FilterDataCompareEnergPCompany , ResultDataCompareEnergPCompany
+from app.datafetch import Database
+from app.models.schema import FilterDataCompareEnergPCompany , ResultDataCompareEnergPCompany
 
 def compare_ernergic_for_private_company( data : FilterDataCompareEnergPCompany ) -> ResultDataCompareEnergPCompany :
     """

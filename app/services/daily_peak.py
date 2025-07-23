@@ -1,6 +1,6 @@
 import numpy as np
-from api.app.datafetch import Database
-from api.app.models.schema import FilterDataDailyPeak, ResultDataDailyPeak
+from app.datafetch import Database
+from app.models.schema import FilterDataDailyPeak, ResultDataDailyPeak
 
 
 

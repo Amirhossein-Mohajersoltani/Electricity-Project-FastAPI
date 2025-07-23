@@ -1,6 +1,6 @@
 # Daily Peak
-# from api.app.models.schema import FilterDataDailyPeak
-# from api.app.services import analyze_max_daily_usage
+# from app.models.schema import FilterDataDailyPeak
+# from app.services import analyze_max_daily_usage
 #
 # data = FilterDataDailyPeak(
 #     start_date="1401-01-01",
@@ -15,15 +15,15 @@
 # --------------------------------------------------------------
 
 # Daily Profile
-# from api.app.models.schema import FilterDataDailyProfile
-# from api.app.services import analyze_24h_usage
+# from app.models.schema import FilterDataDailyProfile
+# from app.services import analyze_24h_usage
 #
 # data = FilterDataDailyProfile(
 #     start_date="1401-01-01",
 #     end_date="1403-01-31",
-#     region_code=[13,12],
-#     fidder_code = [454],
-#     method="mean", # Also max
+#     region_code=[1,10],
+#     fidder_code = [1,137,142,149],
+#     method="max", # Also max
 #     company_id = [3]
 # )
 #
@@ -33,32 +33,32 @@
 # --------------------------------------------------------------
 
 # Compare Energetic
-# from api.app.models.schema import FilterDataEnergyCompare
-# from api.app.services import compare_energetic
-
+# from app.models.schema import FilterDataEnergyCompare
+# from app.services import compare_energetic
+#
 # data = FilterDataEnergyCompare(
 #     year=[1401,1402],
-#     region_code=[1,10],
-#     fidder_code = [1,20,30,50,100],
+#     region_code=[1,2,3],
+#     fidder_code = [1,137,142,149],
 #     company_id = [3],
 # )
-
+#
 # result = compare_energetic(data)
 # print(result)
 
 # --------------------------------------------------------------
 
 # # Long Term
-# from api.app.models.schema import FilterDataLongTerm
-# from api.app.services import long_term
-
+# from app.models.schema import FilterDataLongTerm
+# from app.services import long_term
+#
 # data = FilterDataLongTerm(
 #     year=[1401,1402,1403 ],
-#     region_code=[12,1],
-#     fidder_code = [454,1,2,3,10],
+#     region_code=[1,2,3],
+#     fidder_code = [1,137,142,149],
 #     company_id = [3]
 # )
-
+#
 # result = long_term(data)
 # print(result)
 
@@ -82,22 +82,22 @@
 # --------------------------------------------------------------
 
 ## Load continuity
-# from api.app.models.schema import FilterDataToziBar
-# from api.app.services import tozi_bar
+from app.models.schema import FilterDataToziBar
+from app.services import tozi_bar
 
-# data = FilterDataToziBar(
-#     start_date="1401-01-01",
-#     end_date="1401-04-31",
-#     region_code=[1],
-#     fidder_code=[1],
-#     company_id = [3]
-# )
-# #
-# result = tozi_bar(data)
-# # print(result.region_code)
-# # print(result.fidder_code)
-# # print(result.result[0].keys())
-# # print(result.result[0]["area"])
+data = FilterDataToziBar(
+    start_date="1401-01-01",
+    end_date="1401-04-31",
+    region_code=[1],
+    # fidder_code=[1],
+    company_id = [3]
+)
+#
+result = tozi_bar(data)
+# print(result.region_code)
+# print(result.fidder_code)
+print(len(result.result[0]['sort_value']))
+# print(result.result[0]["area"])
 
 
 # print(result)
@@ -105,21 +105,21 @@
 # --------------------------------------------------------------
 
 # Weekly Peak
-from api.app.models.schema import FilterDataWeeklyPeak
-from api.app.services import analize_week
-
-data = FilterDataWeeklyPeak(
-    start_date="1401-01-01",
-    end_date="1407-01-31",
-    region_code=[1],
-    fidder_code = [1],
-    company_id=[3]
-)
-
-result = analize_week(data)
-print(result)
-
-
+# from app.models.schema import FilterDataWeeklyPeak
+# from app.services import analize_week
+#
+# data = FilterDataWeeklyPeak(
+#     start_date="1401-01-01",
+#     end_date="1407-01-31",
+#     region_code=[1],
+#     fidder_code = [1],
+#     company_id=[3]
+# )
+#
+# result = analize_week(data)
+# print(result)
+#
+#
 
 
 
@@ -129,20 +129,21 @@ print(result)
 
 
 # ------------------------------------------------
-# from api.app.models.schema import FilterDataConsumptionReductionFactor
-# from api.app.services import consumption_reduction_factor
+# from app.models.schema import FilterDataConsumptionReductionFactor
+# from app.services import consumption_reduction_factor
 #
 # data = FilterDataConsumptionReductionFactor(
-#     fidder_code=[1, 4, 10, 13],
-#     region_code=[1,2,3,4,5],
+#     fidder_code=[1,137,142,149],
+#     region_code=[1,2,3],
 #     No_limitation_start_date="1401-07-01",
 #     No_limitation_end_date="1405-08-30",
 #     limitation_start_date="1401-04-01",
-#     limitation_end_date="1408-05-31"
+#     limitation_end_date="1408-05-31",
+#     company_id = [3]
 # )
 #
 # result = consumption_reduction_factor(data)
-# print(result)
+# print(result.model_dump())
 
 
 # -------------------------------------------------

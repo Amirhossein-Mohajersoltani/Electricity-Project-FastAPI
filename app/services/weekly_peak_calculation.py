@@ -6,7 +6,7 @@ import jdatetime
 
 def get_next_friday(date: jdatetime.date) -> jdatetime.date:
     """Get the next Friday from a given Jalali date."""
-    days_until_friday = (6 - date.weekday()) % 7  # 4 = Friday in jdatetime
+    days_until_friday = (6 - date.weekday()) % 7
     return date + jdatetime.timedelta(days=days_until_friday)
 
 
@@ -27,7 +27,6 @@ def analize_week(data: FilterDataWeeklyPeak) -> ResultDataWeeklyPeak:
         company_ids=data.company_id
     )
 
-    # Check if DataFrame is empty or missing 'date' column
     if df.empty or 'date' not in df.columns:
         return ResultDataWeeklyPeak(
             region_code=data.region_code,
@@ -39,10 +38,31 @@ def analize_week(data: FilterDataWeeklyPeak) -> ResultDataWeeklyPeak:
 
     # Ensure dates are in Jalali format (YYYY-MM-DD)
     df['date'] = df['date'].astype(str)
-    filtered_df = df.sort_values('date')
-    filtered_df.set_index('date', inplace=True)
+    df = df.sort_values('date')
 
-    # Parse start and end dates as Jalali
+    # 🧠 Create full Jalali date range
+    g_start = jdatetime.date.fromisoformat(data.start_date).togregorian()
+    g_end = jdatetime.date.fromisoformat(data.end_date).togregorian()
+    full_dates = pd.date_range(start=g_start, end=g_end, freq='D')
+    full_jalali_dates = [jdatetime.date.fromgregorian(date=d).strftime('%Y-%m-%d') for d in full_dates]
+    full_df = pd.DataFrame({'date': full_jalali_dates})
+
+    # 🧩 Merge and fill missing dates
+    merged_df = pd.merge(full_df, df, on='date', how='left')
+
+    # Fill missing H1–H24 with zeros
+    hour_columns = [f"H{i}" for i in range(1, 25)]
+    for col in hour_columns:
+        merged_df[col] = merged_df[col].fillna(0)
+
+    # Fill 'feeder code' if needed
+    if 'feeder code' in merged_df.columns:
+        merged_df['feeder code'] = merged_df['feeder code'].fillna(method='ffill').fillna(method='bfill')
+
+    # Use the merged and completed DataFrame
+    filtered_df = merged_df.set_index('date')
+
+    # Parse start and end dates
     start_date = jdatetime.date.fromisoformat(data.start_date)
     end_date = jdatetime.date.fromisoformat(data.end_date)
 
@@ -50,8 +70,7 @@ def analize_week(data: FilterDataWeeklyPeak) -> ResultDataWeeklyPeak:
         week_ranges = []
         current_start = start_date
 
-        # Determine first week end (Friday)
-        if current_start.weekday() == 6:  # If Friday
+        if current_start.weekday() == 6:
             first_week_end = current_start
         else:
             first_week_end = get_next_friday(current_start)
@@ -75,16 +94,11 @@ def analize_week(data: FilterDataWeeklyPeak) -> ResultDataWeeklyPeak:
             fider_df = filtered_df[filtered_df['feeder code'] == fider]
 
             for week_num, (w_start, w_end) in enumerate(week_ranges, start=1):
-                # Filter data for the week (dates are in Jalali format as strings)
                 window_data = fider_df[(fider_df.index >= w_start.strftime('%Y-%m-%d')) & 
-                                     (fider_df.index < w_end.strftime('%Y-%m-%d'))]
+                                       (fider_df.index < w_end.strftime('%Y-%m-%d'))]
 
                 if not window_data.empty:
-                    day_max = []
-                    hour_columns = [f"H{i}" for i in range(1, 25)]
-                    for i in range(len(window_data)):
-                        row = window_data.iloc[i]
-                        day_max.append(float(row[hour_columns].max()))
+                    day_max = [float(row[hour_columns].max()) for _, row in window_data.iterrows()]
 
                     start_jalali = w_start.strftime('%Y/%m/%d')
                     end_jalali = (w_end - jdatetime.timedelta(days=1)).strftime('%Y/%m/%d')
@@ -108,25 +122,13 @@ def analize_week(data: FilterDataWeeklyPeak) -> ResultDataWeeklyPeak:
         else:
             results = []
 
-        return ResultDataWeeklyPeak(
-            region_code=data.region_code,
-            fidder_code=data.fidder_code,
-            status="success",
-            company_id=data.company_id,
-            result=results
-        )
-
     else:
         for week_num, (w_start, w_end) in enumerate(week_ranges, start=1):
             window_data = filtered_df[(filtered_df.index >= w_start.strftime('%Y-%m-%d')) & 
-                                    (filtered_df.index < w_end.strftime('%Y-%m-%d'))]
+                                      (filtered_df.index < w_end.strftime('%Y-%m-%d'))]
 
             if not window_data.empty:
-                day_max = []
-                hour_columns = [f"H{i}" for i in range(1, 25)]
-                for i in range(len(window_data)):
-                    row = window_data.iloc[i]
-                    day_max.append(float(row[hour_columns].max()))
+                day_max = [float(row[hour_columns].max()) for _, row in window_data.iterrows()]
 
                 start_jalali = w_start.strftime('%Y/%m/%d')
                 end_jalali = (w_end - jdatetime.timedelta(days=1)).strftime('%Y/%m/%d')
@@ -150,10 +152,10 @@ def analize_week(data: FilterDataWeeklyPeak) -> ResultDataWeeklyPeak:
         else:
             results = []
 
-        return ResultDataWeeklyPeak(
-            region_code=data.region_code,
-            fidder_code=data.fidder_code,
-            status="success",
-            company_id=data.company_id,
-            result=results
-        )
+    return ResultDataWeeklyPeak(
+        region_code=data.region_code,
+        fidder_code=data.fidder_code,
+        status="success",
+        company_id=data.company_id,
+        result=results
+    )

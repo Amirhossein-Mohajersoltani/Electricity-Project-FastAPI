@@ -1,5 +1,6 @@
 from app.datafetch import Database
 import pandas as pd
+import numpy as np
 import jdatetime
 from app.models.schema import FilterDataLongTerm, ResultDataLongTerm
 
@@ -38,7 +39,7 @@ def long_term(data: FilterDataLongTerm) -> ResultDataLongTerm:
 
     hour_cols = [f'H{i}' for i in range(1, 25)]
 
-    result = {}
+    output = []
 
     for year in sorted(df['year'].unique()):
         df_year = df[df['year'] == year].copy()
@@ -73,7 +74,6 @@ def long_term(data: FilterDataLongTerm) -> ResultDataLongTerm:
 
         # Group by weeks (ending on Fridays)
         week_num = 1
-        weeks_data = []
         current_date = start_date
 
         while current_date <= end_date:
@@ -89,21 +89,18 @@ def long_term(data: FilterDataLongTerm) -> ResultDataLongTerm:
             week_rows['max_in_day'] = week_rows[hour_cols].max(axis=1)
             max_value = week_rows['max_in_day'].max()
 
-            weeks_data.append({
+            # Convert amount to float if it's a NumPy type
+            amount = float(max_value) if not pd.isna(max_value) else None
+
+            output.append({
                 'start date': current_date.strftime('%Y-%m-%d'),
                 'end date': week_end.strftime('%Y-%m-%d'),
                 'week': week_num,
-                'amount': max_value if not pd.isna(max_value) else None
+                'amount': amount
             })
 
             current_date = week_end + jdatetime.timedelta(days=1)
             week_num += 1
-
-        result[year] = weeks_data
-        # actual_week_count = len(weeks_data)
-        # print(f"Year: {year} | Actual non-empty weeks: {actual_week_count}")
-
-    output = [{str(year): weeks} for year, weeks in result.items()]
 
     return ResultDataLongTerm(
         region_code=data.region_code,

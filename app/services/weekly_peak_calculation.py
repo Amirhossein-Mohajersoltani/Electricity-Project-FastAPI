@@ -139,7 +139,7 @@ def analize_week(data: FilterDataWeeklyPeak) -> ResultDataWeeklyPeak:
                     'date': key,
                     'start_date': start_jalali,
                     'end_date': end_jalali,
-                    'max_week': max(day_max) if day_max else None
+                    'max_week': float(max(day_max)) if day_max else None
                 }
 
                 fiders_week_max.append(week_max)

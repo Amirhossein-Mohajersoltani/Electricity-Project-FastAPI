@@ -137,12 +137,8 @@
   "status": "success",
   "company_id": [3],
   "result": [
-    {
-      "1401": [
-        {"start date": "1401-01-01", "end date": "1401-01-07", "week": 1, "amount": 2},
-        {"start date": "1401-01-08", "end date": "1401-01-14", "week": 2, "amount": 2}
-      ]
-    }
+      {"start date": "1401-01-01", "end date": "1401-01-07", "week": 1, "amount": 2},
+      {"start date": "1401-01-08", "end date": "1401-01-14", "week": 2, "amount": 2}
   ]
 }
 ```
